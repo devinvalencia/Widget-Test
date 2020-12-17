@@ -3,7 +3,45 @@
         <category>custom</category>
         <client_script><![CDATA[api.controller=function() {  /* widget controller */  var c = this;};]]></client_script>
         <controller_as>c</controller_as>
-        <css/>
+        <css>.flip-card {
+  background-color: transparent;
+  width: 300px;
+  height: 300px;
+  perspective: 1000px;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+.flip-card:hover .flip-card-inner {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front, .flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+
+.flip-card-front {
+  background-color: #bbb;
+  color: black;
+}
+
+.flip-card-back {
+  background-color: #2980b9;
+  color: white;
+  transform: rotateY(180deg);
+}</css>
         <data_table>sp_instance</data_table>
         <demo_data/>
         <description/>
@@ -23,22 +61,25 @@
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2020-12-16 01:29:02</sys_created_on>
         <sys_id>78a2d662078520104587f1e08c1ed060</sys_id>
-        <sys_mod_count>2</sys_mod_count>
+        <sys_mod_count>13</sys_mod_count>
         <sys_name>Test Widget</sys_name>
         <sys_package display_value="Test Widget" source="x_560751_test_widg">c95f06ee074520104587f1e08c1ed0c8</sys_package>
         <sys_policy/>
         <sys_scope display_value="Test Widget">c95f06ee074520104587f1e08c1ed0c8</sys_scope>
         <sys_update_name>sp_widget_78a2d662078520104587f1e08c1ed060</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2020-12-16 01:29:33</sys_updated_on>
-        <template><![CDATA[<div>
-<!-- your widget template -->
-</div>
-
-<div>
-  <p>
-    Test
-  </p>
+        <sys_updated_on>2020-12-16 19:50:59</sys_updated_on>
+        <template><![CDATA[<div class="flip-card">
+  <div class="flip-card-inner">
+    <div class="flip-card-front">
+      <img src="img_avatar.png" alt="Avatar" style="width:300px;height:300px;">
+    </div>
+    <div class="flip-card-back">
+      <h1>John Doe</h1> 
+      <p>Architect & Engineer</p> 
+      <p>We love that guy</p>
+    </div>
+  </div>
 </div>]]></template>
     </sp_widget>
 </record_update>
