@@ -3,45 +3,9 @@
         <category>custom</category>
         <client_script><![CDATA[api.controller=function() {  /* widget controller */  var c = this;};]]></client_script>
         <controller_as>c</controller_as>
-        <css>.flip-card {
-  background-color: transparent;
-  width: 300px;
-  height: 300px;
-  perspective: 1000px;
-}
-
-.flip-card-inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  transition: transform 0.6s;
-  transform-style: preserve-3d;
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-}
-
-.flip-card:hover .flip-card-inner {
-  transform: rotateY(180deg);
-}
-
-.flip-card-front, .flip-card-back {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-}
-
-.flip-card-front {
-  background-color: #bbb;
-  color: black;
-}
-
-.flip-card-back {
-  background-color: #2980b9;
-  color: white;
-  transform: rotateY(180deg);
-}</css>
+        <css>.result-container {
+  margin-top: 10px;
+ }</css>
         <data_table>sp_instance</data_table>
         <demo_data/>
         <description/>
@@ -55,31 +19,56 @@
         <option_schema/>
         <public>false</public>
         <roles/>
-        <script><![CDATA[(function() {  /* populate the 'data' object */  /* e.g., data.table = $sp.getValue('table'); */})();]]></script>
+        <script><![CDATA[(function() {
+	if (input.keywords != null && input.keywords != '')
+		data.items = getCatalogItems(input.keywords);
+	
+	function getCatalogItems(keywords) {
+		var sc = new GlideRecord('incident');
+		/* sc.addActiveQuery(); */
+		/* sc.addQuery('123TEXTQUERY321', keywords); */
+		sc.setLimit(10);
+		/* sc.orderByDesc("ir_query_score"); */
+    sc.query();
+    
+    var results = [];
+    
+		while (sc.next()) {
+			if (!$sp.canReadRecord(sc))
+				continue;
+
+			var item = {};
+			$sp.getRecordDisplayValues(item, sc, 'name,price,sys_id'); 
+      item.category = sc.getValue('category');
+      
+			results.push(item);
+		}
+    return results;
+  }
+})();]]></script>
         <servicenow>false</servicenow>
         <sys_class_name>sp_widget</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2020-12-16 01:29:02</sys_created_on>
         <sys_id>78a2d662078520104587f1e08c1ed060</sys_id>
-        <sys_mod_count>13</sys_mod_count>
+        <sys_mod_count>17</sys_mod_count>
         <sys_name>Test Widget</sys_name>
         <sys_package display_value="Test Widget" source="x_560751_test_widg">c95f06ee074520104587f1e08c1ed0c8</sys_package>
         <sys_policy/>
         <sys_scope display_value="Test Widget">c95f06ee074520104587f1e08c1ed0c8</sys_scope>
         <sys_update_name>sp_widget_78a2d662078520104587f1e08c1ed060</sys_update_name>
         <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2020-12-16 19:50:59</sys_updated_on>
-        <template><![CDATA[<div class="flip-card">
-  <div class="flip-card-inner">
-    <div class="flip-card-front">
-      <img src="img_avatar.png" alt="Avatar" style="width:300px;height:300px;">
-    </div>
-    <div class="flip-card-back">
-      <h1>John Doe</h1> 
-      <p>Architect & Engineer</p> 
-      <p>We love that guy</p>
-    </div>
+        <sys_updated_on>2020-12-19 18:16:00</sys_updated_on>
+        <template><![CDATA[<div class="panel panel-primary">
+  <div class="panel-heading">Request an item from the catalog</div>
+  <div class="panel-body">
+    <input class="form-control" type="search" placeholder="Start typing here to search the list of catalog items" ng-model="c.data.keywords" ng-change="c.server.update()" ng-model-options="{debounce: 250}" />
+    <ul class="list-group result-container">
+      <li class="list-group-item" ng-repeat="item in c.data.items">
+        <a href>{{item.name}}</a><span class="pull-right">{{item.price}}</span>
+      </li>
+    </ul>
   </div>
-</div>]]></template>
+ </div>]]></template>
     </sp_widget>
 </record_update>
